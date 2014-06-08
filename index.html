@@ -2,57 +2,12 @@
 <html>
 <head>
     <link type="text/css" href="jsh.css" rel="stylesheet" />
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" charset="utf-8"></script>
     <script scr="paper-full.min.js"></script>
 </head>
 <body>
     <script>
-		document.body.oncontextmenu = function(){return false;}
-	
-      	var width = $( window ).width(),
-            height = $( window ).height();
-			
-		var mdown = 0;
-			
-		d3.select("body")
-			.on("mousedown", mousedown);
-    
-    	var svg = d3.select("body")
-    		.append("svg")
-        	.attr("width", width)
-        	.attr("height", height)
-        	.append("g")
-	        .attr("transform", "translate(" + width/2 + "," + height/2 + ")");
-      
-      	var fleche = svg.append("g");
-		
-		fleche.append("polygon")
-			.data([0])
-        	.attr("points", "-8,0 0,15 8,0")
-        	.classed("fleche", true);
-			
-		console.log(d3.select("polygon"));
-		
-		function mousedown() {
-			mdown = 1
-			hold();
-			//setTimeout(mousedown(), 1000);
-		}
-		
-		function hold() {
-			if (!mdown)
-				return;
-			console.log(fleche.attr("transform"));
-			fleche.transition()
-				.duration(10)
-				.attr("transform", "translate(" + 10 + "," + 10 + ")");
-			setTimeout(hold(), 100);
-		}
-		
-		function mouseup() {
-			mdown = 0;
-		}
+        //le bô script va ici
  	</script>
 </body>
 </html>
