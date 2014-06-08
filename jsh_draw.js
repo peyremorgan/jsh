@@ -1,12 +1,12 @@
 // Create a circle shaped path with its center at the center
 // of the view and a radius of 30:
-var path = new Path.Circle({
-	center: view.center,
-	radius: 30,
-	strokeColor: 'black'
-});
+var center = new Point(50, 50);
+var sides = 3;
+var radius = 40;
+var triangle = new Path.RegularPolygon(center, sides, radius);
+triangle.fillColor = 'black';
 
 function onResize(event) {
 	// Whenever the window is resized, recenter the path:
-	path.position = view.center;
+	triangle.position = view.center;
 }
