@@ -4,7 +4,7 @@ var center = new Point(50, 50);
 var sides = 3;
 var radius = 40;
 var triangle = new Path.RegularPolygon(center, sides, radius);
-triangle.fillColor = 'black';
+triangle.fillColor = '#1BBDCD';
 
 function onResize(event) {
 	// Whenever the window is resized, recenter the path:
