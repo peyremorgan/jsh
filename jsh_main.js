@@ -1,17 +1,15 @@
-// Prevent right-click menu
-document.body.oncontextmenu = function(){return false;}
+/******************************************************/
+/*                      Graphics                      */
+/******************************************************/
 
-var sides = 3;
-var radius = 7;
-var center = view.center;
-var arrow = new Path.RegularPolygon(center, sides, radius);
+var arrow = new Path.RegularPolygon(view.center, 3, 7);
 arrow.fillColor = '#1BBDCD';
 
 var rotateSpeed = 3;
 var rotateDirection = 0;
 
 function onResize(event) {
-  // Whenevr the window is resized, recenter the path:
+  // Whenever the window is resized, recenter the path:
   arrow.position = view.center;
   arrow.translate(new Point(0,view.center.y/-5));
 }
@@ -19,6 +17,13 @@ function onResize(event) {
 function onFrame(event) {
   arrow.rotate(rotateSpeed*rotateDirection, view.center);
 }
+
+/******************************************************/
+/*                       Controls                     */
+/******************************************************/
+
+// Prevent right-click menu
+document.body.oncontextmenu = function(){return false;}
 
 function onKeyDown(event) {
 	switch(event.key)
@@ -33,7 +38,7 @@ function onKeyDown(event) {
         rotateDirection = 1;
         break;
         
-        //Fixme : won't handle both arrows pressed
+      //Fixme : won't handle both arrows pressed
     }
 }
 
@@ -49,7 +54,7 @@ function onKeyUp(event) {
         rotateDirection = 0;
         break;
         
-        //Fixme : won't handle both arrows pressed
+      //Fixme : won't handle both arrows pressed
     }
   
 }
