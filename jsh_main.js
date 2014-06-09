@@ -53,14 +53,24 @@ arrow.fillColor = '#1BBDCD';
 arrow.translate(new Point(0, -hexCenterSize * arrowTranslationFactor));
 gameObjects.push(arrow);
 
+// Score text
+var scoreText = new PointText(new Point(view.viewSize) * scoreTextMarginSizeFactor);
+scoreText.fillColor = '#191970';
+scoreText.fontSize = 20;
+scoreText.fontFamily = 'atomic-age';
+
+var bestScoreText = new PointText(new Point(view.viewSize.width, view.viewSize.height*2) * scoreTextMarginSizeFactor);
+bestScoreText.fillColor = '#191970';
+bestScoreText.fontSize = 20;
+bestScoreText.fontFamily = 'atomic-age';
+
 // Game vars
 var bgRotateDirection = 1;
 var ingame = true;
 var gameReady = true;
 var startFrame = 0;
 var endFrame = 0;
-var scoreBanner;
-var scoreText;
+var bestScore = 0;
 
 function alternateBgRotation() {
     if (!!cycleLength) {
@@ -231,13 +241,11 @@ function newGame() {
 }
 
 function displayScore(score) {
-    if (typeof (scoreText) == 'undefined') {
-        scoreText = new PointText(new Point(view.viewSize) * scoreTextMarginSizeFactor);
-        scoreText.fillColor = '#191970';
-        scoreText.fontSize = 20;
-        scoreText.fontFamily = 'atomic-age';
+  scoreText.content = 'SCORE : ' + score.toString();
+    if(score > bestScore) {
+      bestScore = score;
+        bestScoreText.content = 'BEST : ' + bestScore.toString();
     }
-    scoreText.content = 'SCORE : ' + score.toString();
 
 }
 
