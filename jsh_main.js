@@ -220,6 +220,9 @@ function translateObjects(vector) {
 }
 
 function scaleObjects(scale) {
+    hexCenterSize *= scale;
+    arrowSize *= scale;
+    backGroundSize *= scale;
     for (i in gameObjects) {
         if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
             gameObjects[i].scale(scale, view.center);
