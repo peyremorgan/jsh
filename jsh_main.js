@@ -1,17 +1,19 @@
 /******************************************************/
 /*                Graphics & Game Logic               */
 /******************************************************/
+
 // Speed parameters
 var arrowRotateSpeed = 8;
 var arrowRotateDirection = 0;
 var bgRotateSpeed = 2.5;
 var obstacleSpeedFactor = 0.005;
 var gameOverTimeout = 500; // Unit : ms
+var backgroundFlashSpeed = 0.01;
 // Cycles parameters
 var cycleLength = 180;
 var minCycleLength = 100;
 var maxCycleLength = 160;
-var obstacleSpawnDelay = 120;
+var obstacleSpawnDelayFactor = 0.15;
 var colorChange = -1;
 // Resolution-dependent resizing parameters
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
@@ -31,7 +33,13 @@ var patterns = [
     [true, true, true, true, true, false]
 ];
 
+// Project layers
+var backgroundLayer = new Layer();
+var mainLayer = new Layer();
+
 // Parameter-dependent variables
+var arrowSize;
+var hexCenterSize;
 var obstacleDistance;
 var obstacleSpeed;
 var obstacleSize;
@@ -41,18 +49,10 @@ calculateResolutionDependentVariables(baseSize);
 var obstacles = [];
 var gameObjects = [];
 
-// Back-ground
-var backGroundSize = baseSize * backGroundSizeFactor;
-var rect = new Rectangle(view.center, view.center);
-rect.width = backGroundSize;
-rect.height = backGroundSize;
-rect.center = view.center;
-var backGround = new Path.Rectangle(rect);
-backGround.fillColor = '#CCCCCC';
-gameObjects.push(backGround);
+// Background
+var backGround;
 
 // Central hexagon
-var hexCenterSize = baseSize * hexCenterSizeFactor;
 var hexCenter = new Path.RegularPolygon(view.center, 6, hexCenterSize);
 hexCenter.rotate(30);
 hexCenter.strokeColor = '#097B85';
@@ -61,7 +61,6 @@ var hexCenterRotation = 0;
 gameObjects.push(hexCenter);
 
 // Player arrow
-var arrowSize = baseSize * arrowSizeFactor;
 var arrow = new Path.RegularPolygon(view.center, 3, arrowSize);
 arrow.fillColor = '#1BBDCD';
 arrow.translate(new Point(0, -hexCenterSize * arrowTranslationFactor));
@@ -173,6 +172,7 @@ function gameOver() {
     setTimeout(function () {
         gameReady = true
     }, gameOverTimeout);
+  console.log(obstacles);
 }
 
 
@@ -190,8 +190,8 @@ function detectCollisions() {
 }
 
 function changeColor() {    
-    backGround.fillColor = backGround.fillColor + new Color(1/16, 1/16, 1/16) * colorChange;
-    if (backGround.fillColor.red < 0.533333 || backGround.fillColor.red > 0.933333) {
+    backGround.fillColor = backGround.fillColor + new Color(1,1,1) * colorChange * backgroundFlashSpeed;
+    if (backGround.fillColor.gray < 0.533333 || backGround.fillColor.gray > 0.933333) {
         colorChange *= -1;
     }
 }
@@ -222,11 +222,6 @@ function translateObjects(vector) {
 }
 
 function scaleObjects(scale) {
-    hexCenterSize *= scale;
-    arrowSize *= scale;
-    backGroundSize *= scale;
-    
-    obstacleSpawnDelay *= scale;
     
     for (i in gameObjects) {
         if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
@@ -242,8 +237,8 @@ function scaleObjects(scale) {
 }
 
 function onFrame(event) {
-    if (ingame) {
         changeColor();
+    if (ingame) {
         alternateBgRotation();
         rotateObjects();
         translateObstacles();
@@ -292,9 +287,19 @@ function manageGameScores(event) {
 }
 
 function calculateResolutionDependentVariables(size) {
+  
+    hexCenterSize = hexCenterSizeFactor * size;
+    arrowSize = arrowSizeFactor * size;
+  	obstacleSpawnDelay = obstacleSpawnDelayFactor * size;
+  
     obstacleDistance = obstacleDistanceFactor * size;
     obstacleSpeed = obstacleSpeedFactor * size;
     obstacleSize = obstacleSizeFactor * size;
+  
+	backgroundLayer.activate();
+	backGround = new Path.Rectangle(view.bounds);
+	backGround.fillColor = '#CCCCCC';
+	mainLayer.activate();
 }
 
 /******************************************************/
