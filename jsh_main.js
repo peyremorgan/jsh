@@ -3,18 +3,20 @@
 /******************************************************/
 
 // Speed parameters
-var arrowRotateSpeed = 8;
+var baseArrowRotateSpeed = 8;
 var arrowRotateDirection = 0;
-var bgRotateSpeed = 2.5;
-var obstacleSpeedFactor = 0.005;
+var baseBackgroundRotateSpeed = 2.5;
+var baseObstacleSpeedFactor = 0.005;
 var gameOverTimeout = 500; // Unit : ms
-var backgroundFlashSpeed = 0.01;
+var backgroundFlashSpeed = 0.007;
 // Cycles parameters
 var cycleLength = 180;
 var minCycleLength = 100;
 var maxCycleLength = 160;
-var obstacleSpawnDelayFactor = 0.15;
+var baseObstacleSpawnDelayFactor = 0.15;
 var colorChange = -1;
+var difficultyIncreaseDelay = 600; //60 frames/sec * 10 sec
+var difficultyIncreaseFactor = 0.1;
 // Resolution-dependent resizing parameters
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
 var hexCenterSizeFactor = 0.05;
@@ -79,6 +81,10 @@ bestScoreText.fontFamily = 'atomic-age';
 
 // Game vars
 var bgRotateDirection = 1;
+var arrowRotateSpeed = baseArrowRotateSpeed;
+var obstacleSpeedFactor = baseObstacleSpeedFactor;
+var bgRotateSpeed = baseBackgroundRotateSpeed;
+var obstacleSpawnDelayFactor = baseObstacleSpawnDelayFactor;
 var ingame = true;
 var gameReady = true;
 var startFrame = 0;
@@ -172,7 +178,6 @@ function gameOver() {
     setTimeout(function () {
         gameReady = true
     }, gameOverTimeout);
-  console.log(obstacles);
 }
 
 
@@ -189,11 +194,14 @@ function detectCollisions() {
     }
 }
 
-function changeColor() {    
+function changeColor(time) {  
+/*  
     backGround.fillColor = backGround.fillColor + new Color(1,1,1) * colorChange * backgroundFlashSpeed;
-    if (backGround.fillColor.gray < 0.533333 || backGround.fillColor.gray > 0.933333) {
+    if (backGround.fillColor.gray <= 0.7 || backGround.fillColor.gray >= 0.95) {
         colorChange *= -1;
     }
+    */
+  backGround.fillColor.hue += 360*backgroundFlashSpeed;
 }
 
 function onResize(event) {
@@ -237,7 +245,7 @@ function scaleObjects(scale) {
 }
 
 function onFrame(event) {
-        changeColor();
+  	changeColor(event.count);
     if (ingame) {
         alternateBgRotation();
         rotateObjects();
@@ -248,19 +256,32 @@ function onFrame(event) {
         if (!(event.count % parseInt(obstacleSpawnDelay / obstacleSpeed))) {
             generateObstaclePattern();
         }
+		if (event.count && !((event.count-startFrame) % difficultyIncreaseDelay)) {	
+          increaseDifficulty((event.count-startFrame) / difficultyIncreaseDelay);
+        }
     } else {
         manageGameScores(event);
     }
 }
 
-function newGame() {
-    startFrame = -1;
-    endFrame = 0;
-
-    for (i in obstacles) {
+function clearObstacles() {
+  for (i in obstacles) {
         obstacles[i].remove();
     }
     obstacles = [];
+}
+
+function newGame() {
+    startFrame = -1;
+    endFrame = 0;
+  	
+  	arrowRotateSpeed = baseArrowRotateSpeed;
+	bgRotateSpeed = baseBackgroundRotateSpeed;
+    obstacleSpeedFactor = baseObstacleSpeedFactor;
+    obstacleSpawnDelayFactor = baseObstacleSpawnDelayFactor;
+  	 obstacleSpeed = obstacleSpeedFactor * baseSize;
+
+    clearObstacles();
 }
 
 function displayScore(score) {
@@ -298,8 +319,19 @@ function calculateResolutionDependentVariables(size) {
   
 	backgroundLayer.activate();
 	backGround = new Path.Rectangle(view.bounds);
-	backGround.fillColor = '#CCCCCC';
+	//backGround.fillColor = '#FFFFFF';
+	backGround.fillColor = '#A03030';
 	mainLayer.activate();
+}
+
+function increaseDifficulty(difficulty) {
+  
+	arrowRotateSpeed = (1 + difficulty * difficultyIncreaseFactor) * baseArrowRotateSpeed;
+	bgRotateSpeed = (1 + difficulty * difficultyIncreaseFactor) * baseBackgroundRotateSpeed;
+    obstacleSpeedFactor = (1 + difficulty * difficultyIncreaseFactor) * baseObstacleSpeedFactor;
+	obstacleSpeed = obstacleSpeedFactor * baseSize;
+    obstacleSpawnDelayFactor = (1 + difficulty * difficultyIncreaseFactor) * baseObstacleSpawnDelayFactor;
+  	obstacleSpeedFactor = ( 1 + difficulty * difficultyIncreaseFactor) * baseObstacleSpeedFactor;
 }
 
 /******************************************************/
@@ -318,6 +350,7 @@ function onKeyDown(event) {
     }
 
     switch (event.key) {
+    //Fixme : won't handle both arrows pressed
     case 'left':
         event.preventDefault();
         arrowRotateDirection = -1;
@@ -337,7 +370,11 @@ function onKeyDown(event) {
     case 'down':
         event.preventDefault();
         break;
-        //Fixme : won't handle both arrows pressed
+        
+      case 'space':
+        event.preventDefault();
+        clearObstacles();
+        break;
     }
 }
 
