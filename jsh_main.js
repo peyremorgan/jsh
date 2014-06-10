@@ -12,6 +12,7 @@ var cycleLength = 180;
 var minCycleLength = 100;
 var maxCycleLength = 160;
 var obstacleSpawnDelay = 120;
+var colorChange = -1;
 // Resolution-dependent resizing parameters
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
 var hexCenterSizeFactor = 0.05;
@@ -19,6 +20,7 @@ var arrowSizeFactor = 0.01;
 var obstacleDistanceFactor = 0.4;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
+var backGroundSizeFactor = 1;
 var oldOrigin = view.center;
 // Obstacle generation parameters
 var patterns = [
@@ -36,6 +38,16 @@ calculateResolutionDependentVariables(baseSize);
 // Game objects arrays
 var obstacles = [];
 var gameObjects = [];
+
+// Back-ground
+var backGroundSize = baseSize * backGroundSizeFactor;
+var rect = new Rectangle(view.center, view.center);
+rect.width = backGroundSize;
+rect.height = backGroundSize;
+rect.center = view.center;
+var backGround = new Path.Rectangle(rect);
+backGround.fillColor = '#CCCCCC';
+gameObjects.push(backGround);
 
 // Central hexagon
 var hexCenterSize = baseSize * hexCenterSizeFactor;
@@ -175,6 +187,13 @@ function detectCollisions() {
     }
 }
 
+function changeColor() {    
+    backGround.fillColor = backGround.fillColor + new Color(1/16, 1/16, 1/16) * colorChange;
+    if (backGround.fillColor.red < 0.533333 || backGround.fillColor.red > 0.933333) {
+        colorChange *= -1;
+    }
+}
+
 function onResize(event) {
     var newBaseSize = 2 * Math.min(view.center.x, view.center.y);
 
@@ -216,6 +235,7 @@ function scaleObjects(scale) {
 
 function onFrame(event) {
     if (ingame) {
+        changeColor();
         alternateBgRotation();
         rotateObjects();
         translateObstacles();
