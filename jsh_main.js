@@ -18,6 +18,7 @@ var baseSize = 2 * Math.min(view.center.x, view.center.y);
 var hexCenterSizeFactor = 0.05;
 var arrowSizeFactor = 0.01;
 var obstacleDistanceFactor = 0.4;
+var obstacleSizeFactor = 0.01;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
 var backGroundSizeFactor = 1;
@@ -33,6 +34,7 @@ var patterns = [
 // Parameter-dependent variables
 var obstacleDistance;
 var obstacleSpeed;
+var obstacleSize;
 calculateResolutionDependentVariables(baseSize);
 
 // Game objects arrays
@@ -114,8 +116,8 @@ function createObstacle(angle) {
     var obstacle = new Path({
         segments: [
             [tan30 * obstacleDistance, -obstacleDistance],
-            [tan30 * (obstacleDistance - 15), -(obstacleDistance - 15)],
-            [-tan30 * (obstacleDistance - 15), -(obstacleDistance - 15)],
+            [tan30 * (obstacleDistance - obstacleSize), -(obstacleDistance - obstacleSize)],
+            [-tan30 * (obstacleDistance - obstacleSize), -(obstacleDistance - obstacleSize)],
             [-tan30 * obstacleDistance, -obstacleDistance]
         ],
         fillColor: '#097B85',
@@ -223,6 +225,9 @@ function scaleObjects(scale) {
     hexCenterSize *= scale;
     arrowSize *= scale;
     backGroundSize *= scale;
+    
+    obstacleSpawnDelay *= scale;
+    
     for (i in gameObjects) {
         if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
             gameObjects[i].scale(scale, view.center);
@@ -289,6 +294,7 @@ function manageGameScores(event) {
 function calculateResolutionDependentVariables(size) {
     obstacleDistance = obstacleDistanceFactor * size;
     obstacleSpeed = obstacleSpeedFactor * size;
+    obstacleSize = obstacleSizeFactor * size;
 }
 
 /******************************************************/
