@@ -73,11 +73,18 @@ var scoreText = new PointText(new Point(view.viewSize) * scoreTextMarginSizeFact
 scoreText.fillColor = '#191970';
 scoreText.fontSize = 20;
 scoreText.fontFamily = 'atomic-age';
-
+// Best score text
 var bestScoreText = new PointText(new Point(view.viewSize.width, view.viewSize.height*2) * scoreTextMarginSizeFactor);
 bestScoreText.fillColor = '#191970';
 bestScoreText.fontSize = 20;
 bestScoreText.fontFamily = 'atomic-age';
+
+// Mute button
+var muteButton = new PointText(new Point(view.viewSize.width * (1 - scoreTextMarginSizeFactor), view.viewSize.height * scoreTextMarginSizeFactor));
+muteButton.fillColor = '#191970';
+muteButton.fontSize = 20;
+muteButton.fontFamily = 'foundation-icons';
+muteButton.content = "\uF211";
 
 // Game vars
 var bgRotateDirection = 1;
@@ -90,6 +97,7 @@ var gameReady = true;
 var startFrame = 0;
 var endFrame = 0;
 var bestScore = 0;
+var musicHTMLElement = document.getElementById('music');
 
 function alternateBgRotation() {
     if (!!cycleLength) {
@@ -97,6 +105,17 @@ function alternateBgRotation() {
     } else {
         cycleLength = parseInt(Math.random() * (maxCycleLength - minCycleLength)) + minCycleLength;
         bgRotateDirection *= -1;
+    }
+}
+
+function toggleMute()
+{
+    if(musicHTMLElement.muted) {
+        musicHTMLElement.muted = false;
+        muteButton.content = "\uF211";
+    } else {
+        musicHTMLElement.muted = true;
+        muteButton.content = "\uF20F";
     }
 }
 
@@ -301,8 +320,6 @@ function manageGameScores(event) {
         } else {
             endFrame = event.count;
             var score = endFrame - startFrame;
-
-            // Update best score
         }
     }
 }
@@ -390,5 +407,11 @@ function onKeyUp(event) {
         break;
 
         //Fixme : won't handle both arrows pressed
+    }
+}
+
+function onMouseDown(event) {
+	if (muteButton.hitTest(event.point)) {
+        toggleMute();
     }
 }
