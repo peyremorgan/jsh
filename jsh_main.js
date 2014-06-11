@@ -18,6 +18,7 @@ var colorChange = -1;
 var difficultyIncreaseDelay = 600; //60 frames/sec * 10 sec
 var difficultyIncreaseFactor = 0.1;
 // Resolution-dependent resizing parameters
+var oldOrigin = view.center;
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
 var hexCenterSizeFactor = 0.05;
 var arrowSizeFactor = 0.01;
@@ -26,7 +27,6 @@ var obstacleSizeFactor = 0.01;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
 var backGroundSizeFactor = 1;
-var oldOrigin = view.center;
 // Obstacle generation parameters
 var patterns = [
     [true, true, false, false, true, false],
@@ -235,6 +235,8 @@ function onResize(event) {
 }
 
 function translateObjects(vector) {
+    muteButton.translate(new Point(vector.x*2, 0));
+    
     for (i in gameObjects.concat(obstacles)) {
         if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
             gameObjects[i].translate(vector);
