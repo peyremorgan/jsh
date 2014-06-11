@@ -15,8 +15,11 @@ var minCycleLength = 100;
 var maxCycleLength = 160;
 var baseObstacleSpawnDelayFactor = 0.15;
 var colorChange = -1;
+// Difficulty parameters
 var difficultyIncreaseDelay = 600; //60 frames/sec * 10 sec
 var difficultyIncreaseFactor = 0.1;
+var nextDifficulty = 0;
+var difficultyLevel = 0;
 // Resolution-dependent resizing parameters
 var oldOrigin = view.center;
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
@@ -274,11 +277,13 @@ function onFrame(event) {
         cleanupObstacles();
         detectCollisions();
         displayScore(event.count - startFrame);
-        if (!(event.count % parseInt(obstacleSpawnDelay / obstacleSpeed))) {
+        nextDifficulty++;
+        if (!(nextDifficulty % parseInt(obstacleSpawnDelay / obstacleSpeed))) {
             generateObstaclePattern();
         }
-		if (event.count && !((event.count-startFrame) % difficultyIncreaseDelay)) {	
-          increaseDifficulty((event.count-startFrame) / difficultyIncreaseDelay);
+		//if (event.count && !((event.count-startFrame) % difficultyIncreaseDelay)) {	
+		if (nextDifficulty == difficultyIncreaseDelay) {	
+          increaseDifficulty(difficultyLevel++);
         }
     } else {
         manageGameScores(event);
@@ -345,6 +350,7 @@ function calculateResolutionDependentVariables(size) {
 
 function increaseDifficulty(difficulty) {
   
+    nextDifficulty = 0;
 	arrowRotateSpeed = (1 + difficulty * difficultyIncreaseFactor) * baseArrowRotateSpeed;
 	bgRotateSpeed = (1 + difficulty * difficultyIncreaseFactor) * baseBackgroundRotateSpeed;
     obstacleSpeedFactor = (1 + difficulty * difficultyIncreaseFactor) * baseObstacleSpeedFactor;
