@@ -348,6 +348,7 @@ function clearObstacles() {
 }
 
 function newGame() {
+  nextDifficulty = 0;
   difficultyLevel = 0;
   startFrame = -1;
   endFrame = 0;
