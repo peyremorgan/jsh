@@ -104,23 +104,59 @@ var endFrame = 0;
 var bestScore = 0;
 var musicHTMLElement = document.getElementById('music');
 
-function alternateBgRotation() {
-  if (!!cycleLength) {
-    --cycleLength;
+/*                                                                      ******************
+                                                                        ON EVENT FUNCTIONS
+                                                                        ******************
+*/
+function onFrame(event) {
+  changeColor(event.count);
+  if (ingame) {
+    alternateBgRotation();
+    rotateObjects();
+    translateObstacles();
+    cleanupObstacles();
+    detectCollisions();
+    nextDifficulty++;
+    displayScore(event.count - startFrame);
+    if (!(nextDifficulty % parseInt(obstacleSpawnDelay / obstacleSpeed))) {
+      generateObstaclePattern();
+    }
+    if (nextDifficulty == difficultyIncreaseDelay) {	
+      increaseDifficulty(difficultyLevel++);
+    }
   } else {
-    cycleLength = parseInt(Math.random() * (maxCycleLength - minCycleLength)) + minCycleLength;
-    bgRotateDirection *= -1;
+    manageGameScores(event);
   }
 }
 
-function toggleMute()
-{
-  if(musicHTMLElement.muted) {
-    musicHTMLElement.muted = false;
-    muteButton.content = "\uF211";
-  } else {
-    musicHTMLElement.muted = true;
-    muteButton.content = "\uF20F";
+function onResize(event) {
+  var newBaseSize = 2 * Math.min(view.center.x, view.center.y);
+  
+  translateObjects(view.center - oldOrigin);
+  scaleObjects(newBaseSize / baseSize);
+  oldOrigin = view.center;
+  baseSize = newBaseSize;
+  
+  calculateResolutionDependentVariables(baseSize);
+}
+
+/*                                                                      *****************
+                                                                        OBJECTS FUNCTIONS
+                                                                        *****************
+*/
+function translateObjects(vector) {
+  muteButton.translate(new Point(vector.x*2, 0));
+  
+  for (i in gameObjects.concat(obstacles)) {
+    if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
+      gameObjects[i].translate(vector);
+    }
+  }
+  
+  for (i in obstacles) {
+    if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i)) {
+      obstacles[i].translate(vector);
+    }
   }
 }
 
@@ -140,6 +176,40 @@ function translateObstacles() {
   }
 }
 
+function scaleObjects(scale) {
+  
+  for (i in gameObjects) {
+    if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
+      gameObjects[i].scale(scale, view.center);
+    }
+  }
+  
+  for (i in obstacles) {
+    if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i)) {
+      obstacles[i].scale(scale, view.center);
+    }
+  }
+}
+
+/*                                                                      ***************
+                                                                        SOUND FUNCTIONS
+                                                                        ***************
+*/
+function toggleMute()
+{
+  if(musicHTMLElement.muted) {
+    musicHTMLElement.muted = false;
+    muteButton.content = "\uF211";
+  } else {
+    musicHTMLElement.muted = true;
+    muteButton.content = "\uF20F";
+  }
+}
+
+/*                                                                      *******************
+                                                                        OBSTACLES FUNCTIONS
+                                                                        *******************
+*/
 function createObstacle(angle) {
   var tan30 = Math.tan(Math.PI / 6);
   var obstacle = new Path({
@@ -158,7 +228,6 @@ function createObstacle(angle) {
   obstacles.push(obstacle);
 }
 
-
 function generateObstaclePattern() {
   var pattern = patterns[parseInt(Math.random() * patterns.length)];
   var patternAngle = parseInt(Math.random() * 6) * 60;
@@ -169,16 +238,6 @@ function generateObstaclePattern() {
     }
   }
 }
-
-
-function translateToCenter(path, pixels) {
-  var translation = view.center - path.interiorPoint;
-  var distanceToCenter = translation.length;
-  translation /= distanceToCenter;
-  translation *= pixels;
-  path.scale((distanceToCenter - pixels) / distanceToCenter, view.center);
-}
-
 
 function cleanupObstacles() {
   for (i in obstacles) {
@@ -194,17 +253,6 @@ function cleanupObstacles() {
   }
 }
 
-
-function gameOver() {
-  gameReady = false;
-  ingame = false;
-  
-  setTimeout(function () {
-    gameReady = true
-  }, gameOverTimeout);
-}
-
-
 function detectCollisions() {
   for (i in obstacles) {
     if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i)) {
@@ -215,6 +263,26 @@ function detectCollisions() {
         gameOver();
       }
     }
+  }
+}
+
+function clearObstacles() {
+  for (i in obstacles) {
+    obstacles[i].remove();
+  }
+  obstacles = [];
+}
+
+/*                                                                      ********************
+                                                                        BACKGROUND FUNCTIONS
+                                                                        ********************
+*/
+function alternateBgRotation() {
+  if (!!cycleLength) {
+    --cycleLength;
+  } else {
+    cycleLength = parseInt(Math.random() * (maxCycleLength - minCycleLength)) + minCycleLength;
+    bgRotateDirection *= -1;
   }
 }
 
@@ -277,74 +345,25 @@ function initNewBackground() {
   }
 }
 
-function onResize(event) {
-  var newBaseSize = 2 * Math.min(view.center.x, view.center.y);
+/*                                                                      **********************
+                                                                        GENERAL GAME FUNCTIONS
+                                                                        **********************
+*/
+function gameOver() {
+  gameReady = false;
+  ingame = false;
   
-  translateObjects(view.center - oldOrigin);
-  scaleObjects(newBaseSize / baseSize);
-  oldOrigin = view.center;
-  baseSize = newBaseSize;
-  
-  calculateResolutionDependentVariables(baseSize);
+  setTimeout(function () {
+    gameReady = true
+  }, gameOverTimeout);
 }
 
-function translateObjects(vector) {
-  muteButton.translate(new Point(vector.x*2, 0));
-  
-  for (i in gameObjects.concat(obstacles)) {
-    if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
-      gameObjects[i].translate(vector);
-    }
-  }
-  
-  for (i in obstacles) {
-    if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i)) {
-      obstacles[i].translate(vector);
-    }
-  }
-}
-
-function scaleObjects(scale) {
-  
-  for (i in gameObjects) {
-    if (String(parseInt(i, 10)) === i && gameObjects.hasOwnProperty(i)) {
-      gameObjects[i].scale(scale, view.center);
-    }
-  }
-  
-  for (i in obstacles) {
-    if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i)) {
-      obstacles[i].scale(scale, view.center);
-    }
-  }
-}
-
-function onFrame(event) {
-  changeColor(event.count);
-  if (ingame) {
-    alternateBgRotation();
-    rotateObjects();
-    translateObstacles();
-    cleanupObstacles();
-    detectCollisions();
-    nextDifficulty++;
-    displayScore(event.count - startFrame);
-    if (!(nextDifficulty % parseInt(obstacleSpawnDelay / obstacleSpeed))) {
-      generateObstaclePattern();
-    }
-    if (nextDifficulty == difficultyIncreaseDelay) {	
-      increaseDifficulty(difficultyLevel++);
-    }
-  } else {
-    manageGameScores(event);
-  }
-}
-
-function clearObstacles() {
-  for (i in obstacles) {
-    obstacles[i].remove();
-  }
-  obstacles = [];
+function translateToCenter(path, pixels) {
+  var translation = view.center - path.interiorPoint;
+  var distanceToCenter = translation.length;
+  translation /= distanceToCenter;
+  translation *= pixels;
+  path.scale((distanceToCenter - pixels) / distanceToCenter, view.center);
 }
 
 function newGame() {
