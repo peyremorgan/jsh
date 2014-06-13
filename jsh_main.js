@@ -525,6 +525,10 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
+  if (!ingame && gameReady) {
+    newGame();
+  }
+    
   switch (event.event.which) {
     case 1:
       arrowRotateDirection = 0;
@@ -533,5 +537,6 @@ function onMouseUp(event) {
     case 3:
       arrowRotateDirection = 0;
       break;
+          
   }
 }
