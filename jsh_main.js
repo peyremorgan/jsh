@@ -9,17 +9,20 @@ var baseBackgroundRotateSpeed = 2.5;
 var baseObstacleSpeedFactor = 0.005;
 var gameOverTimeout = 500; // Unit : ms
 var backgroundFlashSpeed = 0.007;
+
 // Cycles parameters
 var cycleLength = 180;
 var minCycleLength = 100;
 var maxCycleLength = 160;
 var baseObstacleSpawnDelayFactor = 0.15;
 var colorChange = -1;
+
 // Difficulty parameters
 var difficultyIncreaseDelay = 600; //60 frames/sec * 10 sec
 var difficultyIncreaseFactor = 0.1;
 var nextDifficulty = 0;
 var difficultyLevel = 0;
+
 // Resolution-dependent resizing parameters
 var oldOrigin = view.center;
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
@@ -30,6 +33,7 @@ var obstacleSizeFactor = 0.01;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
 var backgroundSizeFactor = 1;
+
 // Obstacle generation parameters
 var patterns = [
   [true, true, false, false, true, false],
@@ -91,6 +95,10 @@ muteButton.fontSize = 20;
 muteButton.fontFamily = 'foundation-icons';
 muteButton.content = "\uF211";
 
+// Mouse
+var mouseHideDelay = 90;
+var mouseHideCpt = 0;
+
 // Game vars
 var bgRotateDirection = 1;
 var arrowRotateSpeed = baseArrowRotateSpeed;
@@ -109,6 +117,11 @@ var musicHTMLElement = document.getElementById('music');
                                                                         ******************
 */
 function onFrame(event) {
+  if (mouseHideCpt < mouseHideDelay) {
+      mouseHideCpt++
+  } else if (mouseHideCpt == mouseHideDelay) {
+      document.getElementsByTagName('body')[0].className = "hiddenCursor";
+  }
   changeColor(event.count);
   if (ingame) {
     alternateBgRotation();
@@ -140,6 +153,10 @@ function onResize(event) {
   calculateResolutionDependentVariables(baseSize);
 }
 
+function onMouseMove(event) {
+    mouseHideCpt = 0;
+    document.getElementsByTagName('body')[0].className = "";
+}
 /*                                                                      *****************
                                                                         OBJECTS FUNCTIONS
                                                                         *****************
