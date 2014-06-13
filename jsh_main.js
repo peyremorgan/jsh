@@ -154,8 +154,10 @@ function onResize(event) {
 }
 
 function onMouseMove(event) {
-    mouseHideCpt = 0;
-    document.getElementsByTagName('body')[0].className = "";
+    if (event.event.webkitMovementX || event.event.webkitMovementY) {
+        mouseHideCpt = 0;
+        document.getElementsByTagName('body')[0].className = "";
+    }
 }
 
 /*                                                                      *****************
