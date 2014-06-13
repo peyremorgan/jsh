@@ -507,8 +507,8 @@ function onKeyUp(event) {
 }
 
 function onMouseDown(event) {
-    if (muteButton.hitTest(event)) {
-    toggleMute();
+    if (muteButton.hitTest(event.point)) {
+        toggleMute();
     }
     
     switch(event.event.which) {
