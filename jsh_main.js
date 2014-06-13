@@ -157,6 +157,7 @@ function onMouseMove(event) {
     mouseHideCpt = 0;
     document.getElementsByTagName('body')[0].className = "";
 }
+
 /*                                                                      *****************
                                                                         OBJECTS FUNCTIONS
                                                                         *****************
@@ -506,7 +507,31 @@ function onKeyUp(event) {
 }
 
 function onMouseDown(event) {
-  if (muteButton.hitTest(event.point)) {
+    if (muteButton.hitTest(event)) {
     toggleMute();
+    }
+    
+    switch(event.event.which) {
+        case 1:
+            event.preventDefault();
+            arrowRotateDirection = -1;
+            break;
+
+        case 3:
+            event.preventDefault();
+            arrowRotateDirection = 1;
+            break;
+    }
+}
+
+function onMouseUp(event) {
+  switch (event.event.which) {
+    case 1:
+      arrowRotateDirection = 0;
+      break;
+      
+    case 3:
+      arrowRotateDirection = 0;
+      break;
   }
 }
