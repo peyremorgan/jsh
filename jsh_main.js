@@ -15,7 +15,6 @@ var cycleLength = 180;
 var minCycleLength = 100;
 var maxCycleLength = 160;
 var baseObstacleSpawnDelayFactor = 0.15;
-var colorChange = -1;
 
 // Difficulty parameters
 var difficultyIncreaseDelay = 600; //60 frames/sec * 10 sec
@@ -45,8 +44,10 @@ var patterns = [
 // Project layers
 var backgroundLayer = new Layer();
 var mainLayer = new Layer();
+var warningLayer = new Layer();
 
 // Background
+backgroundLayer.activate();
 var background = new Path.Rectangle(view.bounds);
 var colorChange = 1;
 initNewBackground(difficultyLevel);
@@ -63,12 +64,18 @@ calculateResolutionDependentVariables(baseSize);
 var obstacles = [];
 var gameObjects = [];
 
+// Seizure warning
+var warning = new Raster(url);
+warning.position = view.center.x, view.center.y;
+warning.scaling = 1;
+
 // Central hexagon
+mainLayer.activate();
 var hexCenter = new Path.RegularPolygon(view.center, 6, hexCenterSize);
+var hexCenterRotation = 0;
 hexCenter.rotate(30);
 hexCenter.strokeColor = '#097B85';
-hexCenter.strokeWidth = '2';
-var hexCenterRotation = 0;
+hexCenter.strokeWidtion = 0;
 gameObjects.push(hexCenter);
 
 // Player arrow
@@ -105,7 +112,7 @@ var arrowRotateSpeed = baseArrowRotateSpeed;
 var obstacleSpeedFactor = baseObstacleSpeedFactor;
 var bgRotateSpeed = baseBackgroundRotateSpeed;
 var obstacleSpawnDelayFactor = baseObstacleSpawnDelayFactor;
-var ingame = true;
+var ingame = false;
 var gameReady = true;
 var startFrame = 0;
 var endFrame = 0;
@@ -122,7 +129,10 @@ function onFrame(event) {
     } else if (mouseHideCpt == mouseHideDelay) {
         document.getElementsByTagName('body')[0].className = "hiddenCursor";
     }
-    changeColor(event.count);
+    if(enableBackgroundAnimation)
+    {
+      changeColor(event.count);
+    }
     if (ingame) {
         alternateBgRotation();
         rotateObjects();
@@ -427,9 +437,7 @@ function calculateResolutionDependentVariables(size) {
     obstacleSpeed = obstacleSpeedFactor * size;
     obstacleSize = obstacleSizeFactor * size;
 
-    backgroundLayer.activate();
     background.size = view.size;
-    mainLayer.activate();
 }
 
 function increaseDifficulty(difficulty) {
@@ -503,17 +511,19 @@ function onMouseDown(event) {
     if (muteButton.hitTest(event.point)) {
         toggleMute();
     }
-
-    switch(event.event.which) {
-        case 1:
-            event.preventDefault();
-            arrowRotateDirection = -1;
-            break;
-
-        case 3:
-            event.preventDefault();
-            arrowRotateDirection = 1;
-            break;
+  else
+    {
+      switch(event.event.which) {
+          case 1:
+              event.preventDefault();
+              arrowRotateDirection = -1;
+              break;
+  
+          case 3:
+              event.preventDefault();
+              arrowRotateDirection = 1;
+              break;
+      }
     }
 }
 
@@ -529,7 +539,6 @@ function onMouseUp(event) {
 
         case 3:
             arrowRotateDirection = 0;
-        break;
-
+        	break;
     }
 }
