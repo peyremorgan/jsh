@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1600 900" enable-background="new 0 0 1600 900" xml:space="preserve">
+<g id="Background">
+	<rect id="Outer_Frame" fill="#FFFFFF" stroke="#000000" stroke-width="5" stroke-miterlimit="10" width="1600" height="900"/>
+	<rect id="Header_BG" fill="#FFCA06" stroke="#000000" stroke-width="5" stroke-miterlimit="10" width="1600" height="200"/>
+	<text id="Header" transform="matrix(1.0018 0 0 1 257.0186 154.605)" font-family="'Roboto-Thin'" font-size="125">SEIZURE WARNING</text>
+	<g id="Left_symbol">
+		<g>
+			<path d="M121.2,142.9L121.2,142.9l-0.1-0.2c-0.1-0.1-0.1-0.3-0.2-0.4L83.1,77c-0.6-1.1-1.8-1.9-3.1-1.9c-1.5,0-2.7,0.9-3.3,2.2
+				l0,0L39.3,142l0,0c-0.5,0.6-0.8,1.4-0.8,2.3c0,2,1.6,3.6,3.6,3.6l0,0h75.8l0,0c2,0,3.6-1.6,3.6-3.6
+				C121.5,143.8,121.4,143.3,121.2,142.9z M80,141.1c-2.9,0-5.2-2.3-5.2-5.1c0-2.9,2.3-5.2,5.2-5.2c2.8,0,5.1,2.3,5.1,5.2
+				C85.2,138.9,82.8,141.1,80,141.1z M85.2,95.8V124h0c0,0,0,0,0,0c0,1.2-0.9,2.1-2.1,2.1c0,0,0,0,0,0v0H77c-1.2,0-2.1-0.9-2.1-2.1
+				c0,0,0,0,0,0h0V95.8c0,0,0-0.1,0-0.1c0-1.1,0.9-2,1.9-2.1v0h6.3v0C84.2,93.7,85.1,94.6,85.2,95.8L85.2,95.8L85.2,95.8L85.2,95.8
+				C85.2,95.8,85.2,95.8,85.2,95.8z"/>
+		</g>
+	</g>
+	<g id="Right_symbol">
+		<g>
+			<path d="M1561.2,142.9L1561.2,142.9l-0.1-0.2c-0.1-0.1-0.1-0.3-0.2-0.4L1523.1,77c-0.6-1.1-1.8-1.9-3.1-1.9
+				c-1.5,0-2.7,0.9-3.3,2.2l0,0l-37.4,64.8l0,0c-0.5,0.6-0.8,1.4-0.8,2.3c0,2,1.6,3.6,3.6,3.6l0,0h75.8l0,0c2,0,3.6-1.6,3.6-3.6
+				C1561.5,143.8,1561.4,143.3,1561.2,142.9z M1520,141.1c-2.9,0-5.2-2.3-5.2-5.1c0-2.9,2.3-5.2,5.2-5.2c2.8,0,5.1,2.3,5.1,5.2
+				C1525.2,138.9,1522.8,141.1,1520,141.1z M1525.2,95.8V124h0c0,0,0,0,0,0c0,1.2-0.9,2.1-2.1,2.1c0,0,0,0,0,0v0h-6.1
+				c-1.2,0-2.1-0.9-2.1-2.1c0,0,0,0,0,0h0V95.8c0,0,0-0.1,0-0.1c0-1.1,0.9-2,1.9-2.1v0h6.3v0C1524.2,93.7,1525.1,94.6,1525.2,95.8
+				L1525.2,95.8L1525.2,95.8L1525.2,95.8C1525.2,95.8,1525.2,95.8,1525.2,95.8z"/>
+		</g>
+	</g>
+	<text id="Text" transform="matrix(1 0 0 1 60.2948 305.5972)"><tspan x="0" y="0" font-family="'Roboto-Light'" font-size="72">This game has the potential to trigger seizures </tspan><tspan x="127.9" y="86.4" font-family="'Roboto-Light'" font-size="72">for people with photosensitive epilepsy</tspan><tspan x="311" y="259.2" font-family="'Roboto-Light'" font-size="72">Player discretion is advised</tspan></text>
+	<text id="Button_label" transform="matrix(1.2381 0 0 1 536.1688 743)" font-family="'Roboto-Light'" font-size="28">F L A S H I N G   A N I M A T I O N S</text>
+	<g>
+		<g>
+			<path d="M1561.5,824.2c0-0.8-0.5-1.6-1.2-2l-49.3-28.4c-0.4-0.3-0.8-0.4-1.3-0.4c-1.2,0-2.2,1-2.2,2.2c0,0.1,0,0.2,0,0.3h0V853h0
+				c0.1,1.1,1.1,2,2.2,2c0.4,0,0.8-0.1,1.1-0.3l0,0l49.5-28.6l0,0C1561,825.7,1561.5,825,1561.5,824.2z"/>
+		</g>
+	</g>
+</g>
+<g id="ON" display="none">
+	<g display="inline">
+		<g>
+			<path fill="#CCCCCC" d="M724.7,873.5c48.4,0,96.7,0,145.1,0c2,0,3.9,0,5.9,0c6.4,0,6.4-10,0-10c-48.4,0-96.7,0-145.1,0
+				c-2,0-3.9,0-5.9,0C718.2,863.5,718.2,873.5,724.7,873.5L724.7,873.5z"/>
+		</g>
+	</g>
+	<g display="inline">
+		<line fill="#040A0F" x1="724" y1="869" x2="875" y2="869"/>
+		<g>
+			<path fill="#3FA9F5" d="M724,871c48.4,0,96.7,0,145.1,0c2,0,3.9,0,5.9,0c3.2,0,3.2-5,0-5c-48.4,0-96.7,0-145.1,0
+				c-2,0-3.9,0-5.9,0C720.8,866,720.8,871,724,871L724,871z"/>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 731.3232 846)" display="inline" font-family="'Roboto-Thin'" font-size="100">ON</text>
+</g>
+<g id="OFF">
+	<text transform="matrix(1 0 0 1 711.6699 846)" font-family="'Roboto-Thin'" font-size="100">OFF</text>
+	<g>
+		<g>
+			<path fill="#CCCCCC" d="M724.7,873.5c48.4,0,96.7,0,145.1,0c2,0,3.9,0,5.9,0c6.4,0,6.4-10,0-10c-48.4,0-96.7,0-145.1,0
+				c-2,0-3.9,0-5.9,0C718.2,863.5,718.2,873.5,724.7,873.5L724.7,873.5z"/>
+		</g>
+	</g>
+	<g>
+		<line fill="#040A0F" x1="724" y1="869" x2="875" y2="869"/>
+		<g>
+			<path fill="#040A0F" d="M724,871c48.4,0,96.7,0,145.1,0c2,0,3.9,0,5.9,0c3.2,0,3.2-5,0-5c-48.4,0-96.7,0-145.1,0
+				c-2,0-3.9,0-5.9,0C720.8,866,720.8,871,724,871L724,871z"/>
+		</g>
+	</g>
+</g>
+</svg>
