@@ -32,6 +32,7 @@ var obstacleSizeFactor = 0.01;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
 var backgroundSizeFactor = 1;
+var warningSizeFactor = 0.0007;
 
 // Obstacle generation parameters
 var patterns = [
@@ -52,6 +53,19 @@ var background = new Path.Rectangle(view.bounds);
 var colorChange = 1;
 initNewBackground(difficultyLevel);
 
+// Seizure warning
+warningLayer.activate();
+backgroundLayer.visible = false;
+mainLayer.visible = false;
+var enableBackgroundAnimation = true;
+var warningON = new Raster("img/warningON.svg");
+var warningOFF = new Raster("img/warningOFF.svg");
+var okButton;
+var backgroundAnimationSwitch;
+warningOFF.visible = false;
+
+mainLayer.activate();
+
 // Parameter-dependent variables
 var arrowSize;
 var hexCenterSize;
@@ -63,11 +77,6 @@ calculateResolutionDependentVariables(baseSize);
 // Game objects arrays
 var obstacles = [];
 var gameObjects = [];
-
-// Seizure warning
-var warning = new Raster(url);
-warning.position = view.center.x, view.center.y;
-warning.scaling = 1;
 
 // Central hexagon
 mainLayer.activate();
@@ -438,6 +447,25 @@ function calculateResolutionDependentVariables(size) {
     obstacleSize = obstacleSizeFactor * size;
 
     background.size = view.size;
+    if(warningLayer.visible)
+    {
+      warningON.scaling = warningSizeFactor * size;
+      warningON.position = view.center;
+    
+      warningOFF.scaling = warningSizeFactor * size;
+      warningOFF.position = view.center;
+    
+      warningLayer.activate();
+      okButton = new Path.Rectangle(new Point(view.center.x*5/4, view.center.y*5/4), new Point(view.center.x*7/4, view.center.y*7/4));
+      okButton.fillColor = "#FF00FF";
+      okButton.opacity = 0;
+      
+	  backgroundAnimationSwitch = new Path.Rectangle(new Point(view.center.x*3/4, view.center.y*5/4), new Point(view.center.x*5/4, view.center.y*7/4));
+      backgroundAnimationSwitch.fillColor = "#FF00FF";
+      backgroundAnimationSwitch.opacity = 0;
+      
+      mainLayer.activate();
+    }
 }
 
 function increaseDifficulty(difficulty) {
@@ -510,20 +538,37 @@ function onKeyUp(event) {
 function onMouseDown(event) {
     if (muteButton.hitTest(event.point)) {
         toggleMute();
+      return;
     }
-  else
-    {
-      switch(event.event.which) {
-          case 1:
-              event.preventDefault();
-              arrowRotateDirection = -1;
-              break;
   
-          case 3:
-              event.preventDefault();
-              arrowRotateDirection = 1;
-              break;
-      }
+  if(warningLayer.visible)
+  {
+    if(backgroundAnimationSwitch.hitTest(event.point))
+    {
+      enableBackgroundAnimation = !enableBackgroundAnimation;
+      warningOFF.visible = !warningOFF.visible;
+      warningON.visible = !warningON.visible;
+    }
+    
+    if(okButton.hitTest(event.point))
+    {
+      warningLayer.visible = false;
+      backgroundLayer.visible = true;
+      mainLayer.visible = true;
+      ingame = true;
+    }
+  }
+  
+    switch(event.event.which) {
+      case 1:
+        event.preventDefault();
+        arrowRotateDirection = -1;
+        break;
+        
+      case 3:
+        event.preventDefault();
+        arrowRotateDirection = 1;
+        break;
     }
 }
 
