@@ -32,7 +32,7 @@ var obstacleSizeFactor = 0.01;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
 var backgroundSizeFactor = 1;
-var warningSizeFactor = 0.0007;
+var warningSizeFactor = 0.004;
 
 // Obstacle generation parameters
 var patterns = [
