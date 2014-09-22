@@ -92,6 +92,13 @@ var arrow = new Path.RegularPolygon(view.center, 3, arrowSize);
 arrow.fillColor = '#1BBDCD';
 arrow.translate(new Point(0, -hexCenterSize * arrowTranslationFactor));
 gameObjects.push(arrow);
+var arrowRotation = 270;
+
+// Hitbox for gameover-checking
+var hitbox = new Path.Circle(view.center, -hexCenterSize * arrowTranslationFactor - arrowSize-2/3);
+hitbox.strokeColor = '#FF0000';
+hitbox.opacity = 0;
+gameObjects.push(hitbox);
 
 // Score text
 var scoreText = new PointText(new Point(view.viewSize) * scoreTextMarginSizeFactor);
@@ -122,7 +129,7 @@ var obstacleSpeedFactor = baseObstacleSpeedFactor;
 var bgRotateSpeed = baseBackgroundRotateSpeed;
 var obstacleSpawnDelayFactor = baseObstacleSpawnDelayFactor;
 var ingame = false;
-var gameReady = true;
+var gameReady = false;
 var startFrame = 0;
 var endFrame = 0;
 var bestScore = 0;
@@ -203,7 +210,12 @@ function rotateObjects() {
     hexCenter.rotate(bgRotateSpeed * bgRotateDirection);
     hexCenterRotation += bgRotateSpeed * bgRotateDirection;
     hexCenterRotation = hexCenterRotation % 360;
-    arrow.rotate(arrowRotateSpeed * arrowRotateDirection + bgRotateSpeed * bgRotateDirection, view.center);
+    if(ingame)
+    {
+        arrow.rotate(arrowRotateSpeed * arrowRotateDirection + bgRotateSpeed * bgRotateDirection, view.center);
+        arrowRotation += arrowRotateSpeed * arrowRotateDirection + bgRotateSpeed * bgRotateDirection;
+        arrowRotation = (arrowRotation+360) % 360;
+    }
 }
 
 function translateObstacles() {
@@ -290,11 +302,49 @@ function cleanupObstacles() {
 }
 
 function detectCollisions() {
-    for (i in obstacles) {
+    /*for (i in obstacles) {
         if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i)) {
             var path = obstacles[i];
             var intersections = arrow.getIntersections(path);
             if (intersections.length > 0) {
+                gameOver();
+            }
+        }
+    }*/
+    
+    for(i in obstacles)
+    {
+        if (String(parseInt(i, 10)) === i && obstacles.hasOwnProperty(i))
+        {
+            var path = obstacles[i];
+            var intersections = hitbox.getIntersections(path);
+            var instersectionAngles = [];
+            for(j in intersections)
+            {
+                if (String(parseInt(j, 10)) === j && intersections.hasOwnProperty(j))
+                {
+                    instersectionAngles.push(new Point(intersections[j].point - view.center).angle);
+                }
+            }
+            
+            instersectionAngles.sort(function(a, b){return a-b});
+            
+            // Handle cases where bounds are of opposite sign
+            for(j in instersectionAngles)
+            {
+                if (String(parseInt(j, 10)) === j && instersectionAngles.hasOwnProperty(j))
+                {
+                    instersectionAngles[j] = (instersectionAngles[j] + 360)%360;
+                }
+            }
+
+            instersectionAngles.sort(function(a, b){return a-b});
+               
+            if((instersectionAngles[instersectionAngles.length - 1] 
+                    - instersectionAngles[0] > 180) 
+                ^ (arrowRotation > instersectionAngles[0] 
+                    && arrowRotation < instersectionAngles[instersectionAngles.length - 1]))
+            {
                 gameOver();
             }
         }
@@ -456,11 +506,11 @@ function calculateResolutionDependentVariables(size) {
       warningOFF.position = view.center;
     
       warningLayer.activate();
-      okButton = new Path.Rectangle(new Point(view.center.x*5/4, view.center.y*5/4), new Point(view.center.x*7/4, view.center.y*7/4));
+      okButton = new Path.Rectangle(new Point(view.center.x*4/3, view.center.y*5/4), new Point(view.center.x*2, view.center.y*2));
       okButton.fillColor = "#FF00FF";
       okButton.opacity = 0;
       
-	  backgroundAnimationSwitch = new Path.Rectangle(new Point(view.center.x*3/4, view.center.y*5/4), new Point(view.center.x*5/4, view.center.y*7/4));
+	  backgroundAnimationSwitch = new Path.Rectangle(new Point(view.center.x*2/3, view.center.y*5/4), new Point(view.center.x*4/3-10, view.center.y*2));
       backgroundAnimationSwitch.fillColor = "#FF00FF";
       backgroundAnimationSwitch.opacity = 0;
       
@@ -555,7 +605,11 @@ function onMouseDown(event) {
       warningLayer.visible = false;
       backgroundLayer.visible = true;
       mainLayer.visible = true;
-      ingame = true;
+        
+      setTimeout(function () {
+          gameReady = true;
+          ingame = true;
+    }, gameOverTimeout);
     }
   }
   
