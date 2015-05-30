@@ -25,6 +25,7 @@ var difficultyLevel = 0;
 // Resolution-dependent resizing parameters
 var oldOrigin = view.center;
 var baseSize = 2 * Math.min(view.center.x, view.center.y);
+var BackgroundBaseSize = 2 * Math.max(view.center.x, view.center.y);
 var hexCenterSizeFactor = 0.05;
 var arrowSizeFactor = 0.01;
 var obstacleDistanceFactor = 0.4;
@@ -32,7 +33,7 @@ var obstacleSizeFactor = 0.01;
 var arrowTranslationFactor = 1.4;
 var scoreTextMarginSizeFactor = 0.05;
 var backgroundSizeFactor = 1;
-var warningSizeFactor = 0.004;
+var warningSizeFactor = 0.001;
 
 // Obstacle generation parameters
 var patterns = [
@@ -49,7 +50,8 @@ var warningLayer = new Layer();
 
 // Background
 backgroundLayer.activate();
-var background = new Path.Rectangle(view.bounds);
+var backgroundSize = backgroundSizeFactor * BackgroundBaseSize;
+var background = new Path.Rectangle(0,0,backgroundSize, backgroundSize);
 var colorChange = 1;
 initNewBackground(difficultyLevel);
 
@@ -170,11 +172,14 @@ function onFrame(event) {
 
 function onResize(event) {
     var newBaseSize = 2 * Math.min(view.center.x, view.center.y);
+    var newBackgroundBaseSize = 2 * Math.max(view.center.x, view.center.y);
   
     translateObjects(view.center - oldOrigin);
     scaleObjects(newBaseSize / baseSize);
+    background.scale(newBackgroundBaseSize / BackgroundBaseSize, [0, 0]);
     oldOrigin = view.center;
     baseSize = newBaseSize;
+    BackgroundBaseSize = newBackgroundBaseSize;
   
     calculateResolutionDependentVariables(baseSize);
 }
